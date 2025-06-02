@@ -1,6 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getStorage } from "firebase/storage";
-import { ref, uploadString, getDownloadURL } from "firebase/storage";
+import { getStorage, ref, uploadString, getDownloadURL, deleteObject } from "firebase/storage";
 import { v4 as uuidv4 } from 'uuid';
 import imageCompression from 'browser-image-compression';
 
@@ -18,6 +17,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const storage = getStorage(app);
 
+//이미지 데이터 URL로 변환
 const makeDataUrl = (file) => {
     return new Promise((resolve) => {
         const reader = new FileReader();
@@ -28,6 +28,7 @@ const makeDataUrl = (file) => {
     })
 }
 
+//라이브러리 이용해서 이미지 압축
 const compressImage = async(file) => {
     const options = {
         maxSizeMB: 1,
@@ -44,6 +45,7 @@ const compressImage = async(file) => {
     }
 };
 
+//파일 이름 추출
 const getFilename = async (fileUrl) => {
     if(!fileUrl || typeof fileUrl !== 'string'){
         return null;
@@ -61,6 +63,7 @@ const imageFileUpload = async (file) => {
     if(!file) {
         return null;
     }
+
     if(typeof file === 'string') {
         const filename = await getFilename(file);
         return {url :file, filename: filename};
@@ -76,7 +79,9 @@ const imageFileUpload = async (file) => {
     const imageFile = await makeDataUrl(compressedFile);
     const uuid = uuidv4();
     const filename = `${uuid}.${fileExt}`;
+    //저장경로 설정
     const storageRef = ref(storage, `images/${filename}`);
+    
     try {
         const snapshot = await uploadString(storageRef, imageFile, 'data_url');
         const url = await getDownloadURL(snapshot.ref);

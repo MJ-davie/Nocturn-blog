@@ -13,34 +13,34 @@ import java.time.LocalDate;
 public class PhotoDTO {
 
     private Long id;
-    private LocalDate shoot_date;
-    private LocalDate upload_date;
+    private LocalDate shootDate;
+    private LocalDate uploadDate;
     private String loc;
     private String description;
     private String url;
-    private String tags;
+    private String tag;
 
 
     public Photo toEntity() {
         return Photo.builder()
-                .shootDate(shoot_date)
-                .uploadDate(upload_date)
+                .shootDate(shootDate)
+                .uploadDate(uploadDate)
                 .loc(loc)
                 .description(description)
                 .url(url)
-                .tags(tags)
+                .tag(tag)
                 .build();
     }
 
     public static PhotoDTO toDTO(Photo photo) {
         return PhotoDTO.builder()
                 .id(photo.getId())
-                .shoot_date(photo.getShootDate())
-                .upload_date(photo.getUploadDate())
+                .shootDate(photo.getShootDate())
+                .uploadDate(photo.getUploadDate())
                 .loc(photo.getLoc())
                 .description(photo.getDescription())
                 .url(photo.getUrl())
-                .tags(photo.getTags())
+                .tag(photo.getTag())
                 .build();
     }
 

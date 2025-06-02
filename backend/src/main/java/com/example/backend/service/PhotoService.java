@@ -24,4 +24,30 @@ public class PhotoService {
                 .map(PhotoDTO::toDTO)
                 .toList();
     }
+
+    public void delete(Long id){
+        photoRepository.deleteById(id);
+    }
+
+    // 사진 조회
+    public PhotoDTO findById(Long id){
+        return photoRepository.findById(id)
+                .map(PhotoDTO::toDTO)
+                .orElseThrow(()->new IllegalArgumentException("해당 사진이 존재하지 않습니다."));
+    }
+
+    // 수정
+    public void update(Long id, PhotoDTO dto) {
+        Photo photo = photoRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 사진이 존재하지 않습니다."));
+
+        photo.setLoc(dto.getLoc());
+        photo.setShootDate(dto.getShootDate());
+        photo.setUploadDate(dto.getUploadDate());
+        photo.setDescription(dto.getDescription());
+        photo.setTag(dto.getTag());
+        photo.setUrl(dto.getUrl());
+
+        photoRepository.save(photo);
+    }
 }

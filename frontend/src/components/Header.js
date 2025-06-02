@@ -4,7 +4,7 @@ import '../css/Header.css';
 const Header = () => {
     return (
         <div className="main-header">
-            <h1>Nocturnal</h1>
+            <img src="/images/logo.png" alt="Logo" className="logo"/>
         </div>
     );
 };
