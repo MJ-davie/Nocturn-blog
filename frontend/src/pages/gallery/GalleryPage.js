@@ -57,7 +57,7 @@ const GalleryPage = () => {
                         <EditButton onClick={()=> navigate(`/gallery/edit/${photo.id}`)}>수정</EditButton>
                         </>
                       )}
-                      <img src={photo.url} alt={photo.description} />
+                      <img src={photo.thumbnailUrl || photo.url} alt={photo.description} />
                     </PhotoWrapper>
                     <PhotoInfo>
                         <p>{photo.loc}</p>
@@ -69,7 +69,7 @@ const GalleryPage = () => {
             {isAdmin === true && (
               <UploadButtonContainer>
                 <UploadButton 
-                  onClick={() => navigate('/admin/upload')} 
+                  onClick={() => navigate('/gallery/upload')} 
                   className="upload-button">사진 업로드</UploadButton>
               </UploadButtonContainer>
             )}

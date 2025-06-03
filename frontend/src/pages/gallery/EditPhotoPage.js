@@ -13,6 +13,7 @@ const EditPhotoPage = () => {
     const [tag, setTag] = useState("");
     const [file, setFile] = useState(null);
     const [originalUrl, setOriginalUrl] = useState("");
+    const [previewUrl, setPreviewUrl] = useState("");
 
 
     // 기존 정보 불러오기
@@ -33,7 +34,15 @@ const EditPhotoPage = () => {
     }, [id]);
 
     const handleFileChange = (e) => {
-        setFile(e.target.files[0]);
+        const selectedFile = e.target.files[0];
+        setFile(selectedFile);
+        
+        if (selectedFile) {
+            const preview = URL.createObjectURL(selectedFile);
+            setPreviewUrl(preview);
+        } else {
+            setPreviewUrl(null);
+        }
     };
 
     const handleSubmit = async (e) => {
@@ -88,6 +97,8 @@ const EditPhotoPage = () => {
     return (
         <form className="upload-form" onSubmit={handleSubmit}>
             <div className="image-preview">
+                {previewUrl && <img src={previewUrl} alt="Preview" 
+                style={{ width: "300px", height: "200px", objectFit: "cover" }}/>}
                 <input type="file" accept="image/*" onChange={handleFileChange}/>
             </div>
             <input type="text" placeholder="장소" value={loc} onChange={(e)=>setLoc(e.target.value)}/>

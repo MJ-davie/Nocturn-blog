@@ -29,5 +29,7 @@ public class Photo {
     @Column( nullable = false)
     private String url;
 
+    private String thumbnailUrl;
+
     private String tag;
 }

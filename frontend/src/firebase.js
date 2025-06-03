@@ -85,7 +85,21 @@ const imageFileUpload = async (file) => {
     try {
         const snapshot = await uploadString(storageRef, imageFile, 'data_url');
         const url = await getDownloadURL(snapshot.ref);
-        return { url, filename };
+        //썸네일 생성
+        const thumbnailFile = await imageCompression(file, {
+            maxSizeMB: 0.1,
+            maxWidthOrHeight: 300,
+            useWebWorker: true,
+        });
+
+        const thumbnailDataUrl = await makeDataUrl(thumbnailFile);
+        const thumbnailName = `${uuidv4()}_thumb.${fileExt}`;
+        const thumbnailRef = ref(storage, `thumbnails/${thumbnailName}`);
+        const thumbSnap = await uploadString(thumbnailRef, thumbnailDataUrl, 'data_url');
+        const thumbnailUrl = await getDownloadURL(thumbSnap.ref);
+
+        return { url, filename, thumbnailUrl };
+
     } catch (error) {
         console.error("Error uploading file:", error);
         throw error;
@@ -93,7 +107,7 @@ const imageFileUpload = async (file) => {
 };
 
 //이미지 삭제
-const deleteFile = async (fileUrl) => {
+const deleteFile = async (fileUrl, thumbnailUrl) => {
     //firebase storage url 받아서 버킷파일 삭제
     if(!fileUrl || typeof fileUrl !== 'string') {
         return;
@@ -111,6 +125,23 @@ const deleteFile = async (fileUrl) => {
         } else {
         console.error('Error deleting file:', error);
         throw error;
+        }
+    }
+
+    if(thumbnailUrl && typeof thumbnailUrl === 'string') {
+        const thumbFilename = await getFilename(thumbnailUrl);
+        const thumbRef = ref(storage, `thumbnails/${thumbFilename}`);
+        try {
+            await getDownloadURL(thumbRef);
+            await deleteObject(thumbRef);
+        } catch (error) {
+            if (error.code === 'storage/object-not-found') {
+                console.error('Thumbnail file not found');
+                return;
+            } else {
+                console.error('Error deleting thumbnail file:', error);
+                throw error;
+            }
         }
     }
 };
