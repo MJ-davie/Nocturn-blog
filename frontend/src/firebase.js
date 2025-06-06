@@ -52,7 +52,8 @@ const getFilename = async (fileUrl) => {
     }
     const urlParts =fileUrl.split('/');
     const removeQuery = urlParts[urlParts.length - 1].split('?')[0];
-    const filename = removeQuery.split('%2F')[1];
+    const filenameParts = removeQuery.split('%2F');
+    const filename = filenameParts[filenameParts.length - 1];
     return filename;
 }
 

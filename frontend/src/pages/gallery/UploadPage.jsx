@@ -34,7 +34,7 @@ const UploadPage = () => {
 
         try {
             // Firebase에 이미지 업로드
-            const { url } = await imageFileUpload(file);
+            const { url, thumbnailUrl } = await imageFileUpload(file);
 
             // 서버에 전송할 데이터 준비
             const dto = {
@@ -44,6 +44,7 @@ const UploadPage = () => {
                 description: description,
                 tag: tag,
                 url: url,
+                thumbnailUrl: thumbnailUrl, // 썸네일은 업로드한 이미지와 동일하게 설정
             };
 
             // 서버에 데이터 전송

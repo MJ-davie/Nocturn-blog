@@ -47,6 +47,7 @@ public class PhotoService {
         photo.setDescription(dto.getDescription());
         photo.setTag(dto.getTag());
         photo.setUrl(dto.getUrl());
+        photo.setThumbnailUrl(dto.getThumbnailUrl());
 
         photoRepository.save(photo);
     }

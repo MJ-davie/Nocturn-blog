@@ -1,11 +1,16 @@
-import React from "react";
+import React, { useState, useEffect, use } from "react";
 import style from "styled-components";
 import { useNavigate } from "react-router-dom";
 
 const AdminLogin = () => {
-    const [ID, setID] = React.useState("");
-    const [Password, setPassword] = React.useState("");
+    const [ID, setID] = useState("");
+    const [Password, setPassword] = useState("");
     const navigate = useNavigate();
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+    useEffect(() => {
+        setIsLoggedIn(localStorage.getItem('isAdmin') === 'true');
+    }, [])
 
     const handleLogin = (e) => {
         e.preventDefault();
@@ -24,6 +29,7 @@ const AdminLogin = () => {
         .then((res) => {
             if (res.ok) {
                 localStorage.setItem('isAdmin', 'true');
+                setIsLoggedIn(true);
                 navigate('/GalleryPage');
             } else {
                 alert('Login failed!');
@@ -35,14 +41,28 @@ const AdminLogin = () => {
         });
     };
 
+    const handleLogout = () => {
+        localStorage.removeItem('isAdmin');
+        setIsLoggedIn(false);
+    };
+
     return (
         <LoginContainer>
-            <h2>Admin Login</h2>
-            <form onSubmit={handleLogin}>
-                <input type="text" placeholder="ID" value={ID} onChange={(e)=> setID(e.target.value)}/>
-                <input type="password" placeholder="Password" value={Password} onChange={(e)=> setPassword(e.target.value)}/>
-                <button type="submit">Login</button>
-            </form>
+            {isLoggedIn ? (
+                <>
+                    <h2>Welcome, Admin!</h2>
+                    <button onClick={handleLogout}>Logout</button>
+                </>
+            ) : (
+                <>
+                    <h2>Admin Login</h2>
+                    <form onSubmit={handleLogin}>
+                        <input type="text" placeholder="ID" value={ID} onChange={(e)=> setID(e.target.value)}/>
+                        <input type="password" placeholder="Password" value={Password} onChange={(e)=> setPassword(e.target.value)}/>
+                        <button type="submit">Login</button>
+                    </form>
+                </>
+            )}
         </LoginContainer>
     );
 };

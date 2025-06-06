@@ -1,2 +1,31 @@
 backend/src/main/resources/application-secret.properties
 frontend/.env
+
+# node, npm, yarn
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# macOS
+.DS_Store
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# 빌드/실행/캐시 파일
+*.bin
+*.lock
+*.log
+*.tmp
+
+# 백엔드에서 생성되는 파일
+backend/executionHistory.bin
+backend/file-system.probe
+
+# 기타
+dist/
+build/
+.env
